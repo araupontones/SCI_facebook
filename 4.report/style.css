@@ -1,0 +1,26 @@
+
+body{
+  
+  font-family: 'Roboto', sans-serif;
+
+}
+
+
+h1, h2 {
+  
+   font-weight: 100 !important ;
+  
+}
+
+p, li{
+  font-weight: 400 ;
+  font-size: 16px;
+  color: #4d4d4d;
+
+
+}
+
+tr {
+  
+  font-size: 12px;
+}

@@ -1,0 +1,207 @@
+---
+title: "Exploratory: Correlation Between Facebook Social Conectedness Index and UN's Migrant Stock"
+output:
+  html_document:
+    css: style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+dir_proj = file.path(dirname(getwd()))
+dir_R = file.path(dirname(getwd()), "R")
+
+source(file.path(dir_proj,"set_up.R"))
+
+dir_data = file.path(dir_proj, "1.Data")
+dir_raw = file.path(dir_data, "raw_data")
+dir_clean = file.path(dir_data, "clean_data")
+
+extrafont::loadfonts(device = "win")
+
+#read data
+joint_data = import(file.path(dir_clean, "joint_un_sci_pop_codelist.rds"))
+
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+</style>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+</style>
+
+<hr>
+
+# Data sources
+
+ 
+ * **Iso codes, region, and income level:**  `r emo::ji("package")` {wbstats} and `r emo::ji("package")`{countrycodes} R packages. This analysis excludes observations that are not present in the World Bank's list of countries.
+ 
+  
+ *  [Facebook's Social Connectedness Index](https://dataforgood.fb.com/docs/social-connectedness-index-methodology/) : It measures the relative probability of a Facebook friendship link between a given Facebook user in location *i* and a user in location *j.* Put differently, if this measure is twice as large, a Facebook user in *i* is about twice as likely to be connected with a given Facebook user in *j*. SCI excludes the following areas: Afghanistan, Western Sahara, China, Cuba, Iraq, Israel, Iran, North Korea, Russia, Syria, Somalia, South Sudan, Sudan, Venezuela, Yemen, Crimea, Jammu and Kashmir, Donetsk, Luhansk, Sevastopol, West Bank, and Gaza.
+ 
+ * [UN Migrant Stock By Origin And Destination](https://www.un.org/en/development/desa/population/migration/data/estimates2/estimates19.asp) : The total migrant stock at mid-year by origin and country of destination
+ 
+ * **World Bank's Total Population** : Total population by country, accessed via `r emo::ji("package")` {wbstats} in R.
+ 
+
+# Clean data
+
+Because the SCI data contains only information for 2019, the clean version of the "joint/merged" dataset only includes data for this year and for countries that are included in all the data sources (UN Stocks, Facebook SCI, World Bank's Total Population). The _iso codes_ were used to define **A unique bilateral identifier** for each combination of countries. A second identifier was created to identify the direction of the relationship between countries. 
+
+The variables _stocks_bilateral_,  _flow_origin_ and _flow_destination_ were calculated using UN's Migration Stock.
+
+The table below shows 10 rows of the clean data:
+
+
+
+```{R, echo= F}
+
+
+
+ table = DT::datatable(joint_data %>%
+                         filter(stocks_destination >0) %>%
+                         filter(row_number() <= 10
+                               ) %>%
+                         select(-seq, - Code_destination, -Code_origin),
+                       rownames = F,
+                       options = list(scrollX = TRUE,
+                                      dom = 't'
+                                      )
+                       )
+ 
+ 
+ table
+
+```
+ 
+
+
+
+
+
+# Correlation between SCI and UN bilateral stocks
+
+```{r plot, echo=FALSE, warning=FALSE, out.width = '100%', message=FALSE}
+
+data_un_sci = joint_data %>%
+  filter(stocks_bilateral >0)
+  
+ 
+
+
+ggplot(data = data_un_sci,
+       aes(x = log(stocks_bilateral),
+           y = log(scaled_sci))
+)+
+  geom_point(fill = "#8F1838",
+             show.legend = F,
+             size = 1,
+             color = "white",
+             shape = 21) +
+  geom_smooth(method = "lm",
+              color = "#0033A1") +
+  
+  labs(x = "UN's Bilateral Stock of Migrants (log)",
+       y = "Facebook SCI (log)",
+       title= "") +
+  theme(
+    strip.background = element_blank(),
+    axis.title = element_markdown(family="Open Sans Light", size = 16),
+    panel.background = element_blank(),
+    panel.grid.major = element_line(color = "#E3E3E3"),
+   
+  )
+
+
+```
+
+<hr>
+## By country's income level
+
+```{r plot_income, echo=FALSE, warning=FALSE, out.width = '100%', message=FALSE}
+
+data_un_sci = import(file.path(dir_clean, "joint_un_sci_pop_codelist.rds")) %>%
+  filter(stocks_bilateral >100,
+         seq == 1) %>%
+  mutate(flow_income = str_replace_all(flow_income, "income", ""))
+ 
+
+
+ggplot(data = data_un_sci,
+       aes(x = log(stocks_bilateral),
+           y = log(scaled_sci))
+)+
+  geom_point(aes(fill = flow_income),
+             show.legend = F,
+             size = 1,
+             color = "white",
+             shape = 21) +
+  geom_smooth(method = "lm",
+              color = "#0033A1") +
+  facet_wrap(
+    ~flow_income, scales = c("free_y")
+  ) +
+  labs(x = "UN's Bilateral Stock of Migrants (log)",
+       y = "Facebook SCI (log)",
+       title= "") +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(hjust = 0, size = 8, family = "Open Sans"),
+    axis.title = element_markdown(family="Open Sans Light", size = 16),
+    panel.background = element_blank(),
+    panel.grid.major = element_line(color = "#E3E3E3"),
+    plot.title = element_markdown(family = "Roboto", hjust = .5, size = 20)
+  )
+
+
+
+```
+
+<hr>
+## By country's region
+
+```{r plot_region, echo=FALSE, warning=FALSE, out.width = '100%', message=FALSE}
+
+data_un_sci = import(file.path(dir_clean, "joint_un_sci_pop_codelist.rds")) %>%
+  filter(stocks_bilateral >100,
+         seq == 1) %>%
+  mutate(flow_income = str_replace_all(flow_income, "income", ""))
+ 
+
+
+ggplot(data = data_un_sci,
+       aes(x = log(stocks_bilateral),
+           y = log(scaled_sci))
+)+
+  geom_point(aes(fill = flow_region),
+             show.legend = F,
+             size = 1,
+             color = "white",
+             shape = 21) +
+  geom_smooth(method = "lm",
+              color = "#0033A1") +
+  facet_wrap(
+    ~flow_region, scales = c("free_y")
+  ) +
+  labs(x = "UN's Bilateral Stock of Migrants (log)",
+       y = "Facebook SCI (log)",
+       title= "") +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(hjust = 0, size = 7.5, family = "Open Sans"),
+    axis.title = element_markdown(family="Open Sans Light", size = 16),
+    panel.background = element_blank(),
+    panel.grid.major = element_line(color = "#E3E3E3"),
+    plot.title = element_markdown(family = "Roboto", hjust = .5, size = 20)
+  )
+
+
+
+```
+
