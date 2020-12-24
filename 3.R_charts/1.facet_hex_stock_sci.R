@@ -61,7 +61,6 @@ plot = ggplot(data = data,
   scale_x_continuous(limits = c(1,6),
                       breaks = c(4,6),
                      labels = function(x){ prettyNum(10^x, big.mark = ",")})+
-  
  
    guides(fill = guide_colourbar(barwidth = 6, barheight = .5, ticks.linewidth = 1,
                                 title = "Observations", title.position = 'top',
@@ -70,11 +69,11 @@ plot = ggplot(data = data,
   ) +
 
   #scale_x_continuous()+
-  labs(y = "Facebook Social Connectedness Index* ( _log scale_)",
-       x = "Bilateral Stock of Migrants* ( _log scale_)",
+  labs(y = "Facebook Social Connectedness Index",
+       x = "Bilateral Stock of Migrants",
        title= "Correlation Between Facebook's SCI and UN's Bilateral Stock",
        subtitle = "By Countries' Region and Income",
-       caption = "**Data**: United Nations Population Division, 2017 | Facebook SCI, November 2020") +
+       caption = "**Data**: United Nations Population Division, 2017 | Facebook SCI, November 2020 | **Chart:** Andres Arau") +
   theme(
     
     #Panel
