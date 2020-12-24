@@ -12,6 +12,10 @@ export(data_un_sci %>%
                 scaled_sci = log(scaled_sci)
                 ), file.path(dir_plots, "data.csv"))
 
+#OLS 
+linearMod <- lm(log(stocks_bilateral, base = 10) ~ log(scaled_sci, base = 10) , data=data_un_sci)
+
+linearMod$coefficients
 
 data_points= subset(data_un_sci, ID_direction%in% c("MXUS", "LRSL", "NGNO", "MAES", "INAR",
                                                     "PGWS")) %>%
@@ -103,7 +107,7 @@ plot = ggplot(data = data_un_sci,
   #legend text -----------------------------------------------------------------
   annotate('text',
            y = 18,
-           x = 6,
+           x = 6.2,
            #hjust = .5,
            label = "Number of observations",
            family="Open Sans Light") +
@@ -125,10 +129,11 @@ plot = ggplot(data = data_un_sci,
            family="Open Sans Light"
            ) +
   #labels ======================================================================
-  labs(y = "Facebook Social Connectedness Index* ( _log scale_)",
-       x = "Bilateral Stock of Migrants* ( _log scale_)",
-       caption = "**Data**: United Nations Population Division, 2017 | Facebook SCI, November 2020", 
-       title = "Facebook SCI and UN's Bilateral Stock of Migrants") +
+  labs(y = "Facebook Social Connectedness Index",
+       x = "Bilateral Stock of Migrants",
+       caption = "**Data**: United Nations Population Division, 2019 | Facebook SCI, November 2020 | **Chart:** GMDAC", 
+       title = "Facebook's SCI and UN's Bilateral Stock of Migrants",
+       subtitle = "1% increase in Facebook networks is associated with a 0.7% in migrant stocks ") +
   
   #theme ------------------------------------------------------------------------
   theme(
@@ -142,7 +147,7 @@ plot = ggplot(data = data_un_sci,
     
     #legend
     legend.text = element_blank(),
-    legend.position = c(.8,.9),
+    legend.position = c(.8,.89),
     legend.direction = 'horizontal',
     
     #axis
@@ -156,7 +161,9 @@ plot = ggplot(data = data_un_sci,
     plot.caption = element_markdown(family="Open Sans Light", size = 12, margin = margin(t = 10)),
     
     #title 
-    plot.title = element_markdown(family="Open Sans Light", size = 24, hjust = .1)
+    plot.title = element_markdown(family="Open Sans Light", size = 24, hjust = 0),
+    plot.subtitle = element_markdown(family="Open Sans Light", size = 16, hjust = .1,
+                                     colour = "#313131", margin = margin(b = 10)),
     
    
     
@@ -169,4 +176,7 @@ filename = file.path(dir_plots, "SCI_UN.png")
 
 ggsave(filename = filename,
        plot = plot,
+       width = 22,
+       height = 15,
+       units = "cm",
        dpi = 400) 

@@ -23,7 +23,7 @@ data_gg = rbind(syria, iraq, china)
 
 #' plot ggtrends vs inflows for the three country pairs------------------------
 
-pairs = c("Syria to Sweden", "Iraq to Canada", "China to Korea")
+pairs = c("Iraq to Canada", "China to Korea")
 
 
 #1 function to plot  
@@ -83,7 +83,8 @@ plot_pais =  function(p) {
     
     #title and caption --------------------------------------------------------
     
-    labs(title = p,
+    labs(title = "Correlation Between Google Trends Index & OECD Migration Inflows",
+         subtitle = p,
          caption = caption
          ) +
     
@@ -119,7 +120,9 @@ plot_pais =  function(p) {
       panel.grid.major = element_line(color = "#E3E3E3"),
       
       #title 
-      plot.title = element_markdown(family="Open Sans Light", size = 24, hjust = .1),
+      plot.title = element_markdown(family="Open Sans Light", size = 20, hjust = .5),
+      plot.subtitle = element_markdown(family="Open Sans Light", size = 16, hjust = .5,
+                                       colour = "#313131", margin = margin(b = 10)),
       
       #caption 
       plot.caption = element_markdown(family="Open Sans Light", size = 12, margin = margin(t = 10)),
@@ -152,7 +155,9 @@ plot_pais =  function(p) {
   #save plot in local drive
   filename = file.path(dir_plots, paste0(p,".png"))
   print(filename)
-  ggsave(filename, plot = plot, dpi = 400)
+  ggsave(filename, plot = plot, dpi = 400,
+         width = 9,
+         height = 4)
   #return the plot  
   return(plot)
   
@@ -163,8 +168,5 @@ plot_pais =  function(p) {
 #Create plots -----------------------------------------------------------------
 map(pairs, plot_pais)
 names(plots) = pairs
-filename
 
-plots[1]  
-plots[2]
-plots[3]
+
