@@ -33,7 +33,7 @@ un_sci %>%
 #Fetch indicators from countrycodes
 
 un_sci_wb %>%
-  left_join(select(countrycodes, -c(country, Country)),by=c("iso2_destination" = "iso2c")) %>%
+  left_join(select(countrycodes, -c(country, Country)),by=c("iso2_origin" = "iso2c")) %>%
   left_join(select(countrycodes, -c(country, Country)),by=c("iso2_destination" = "iso2c"),
             suffix = c("_origin", "_destination"))  -> un_sci_wb_cc
   
