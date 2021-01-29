@@ -17,7 +17,6 @@ pop = wbsearch("GDP") #search for indicators name
 
 wb_data = wb(indicator =c("SP.POP.TOTL", "NY.GDP.PCAP.CD"))
                           
-                          #"NY.GDP.PCAP.CD"))
 
 #check iso2c matches with clean country codes ---------------------------------------
 unmatched = setdiff(unique(wb_data$iso2c), unique(countrycodes$iso2c)) 
