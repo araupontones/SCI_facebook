@@ -33,3 +33,5 @@ clean_un_sci = left_join(clean_un, select(clean_sci, ID, scaled_sci)) %>%
 
 #export to clean folder -------------------------------------------------------
 export(clean_un_sci, file.path(dir_clean, "joint_un_sci_clean.rds"))
+
+joint_un_sci_clean = import(file.path(dir_clean, "joint_un_sci_clean.rds"))
