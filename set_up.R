@@ -1,6 +1,7 @@
 #'set up
 
 library(pacman)
+# devtools::install_github("hadley/emo")
 library(emo)
 
 options("scipen"=100, "digits"=4)
