@@ -6,7 +6,7 @@ library(emo)
 
 options("scipen"=100, "digits"=4)
 
-p_load(countrycode, tidyverse, rio, gt, gtrendsR, wbstats, ggtext)
+p_load(countrycode, tidyverse, rio, gt, gtrendsR, wbstats, ggtext,gmt)
 
 #' Set paths
   
